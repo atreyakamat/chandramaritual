@@ -1,0 +1,229 @@
+{% liquid
+  if closest.collection == blank
+    assign collection_title = 'placeholders.collection_title' | t
+  else
+    assign collection_title = closest.collection.title
+  endif
+
+  # Split title into parts - "THE" prefix and the rest
+  assign title_words = collection_title | split: ' '
+  assign first_word = title_words.first
+  assign remaining_words = title_words | shift
+  assign remaining_title = remaining_words | join: ' '
+%}
+
+<div
+  class="collection-title-overlay-wrapper"
+  style="
+    --overlay-bottom: {{ block.settings.bottom_position }}px;
+    --overlay-left: {{ block.settings.left_position }}px;
+    --overlay-padding-block: {{ block.settings.padding_block }}px;
+    --overlay-padding-inline: {{ block.settings.padding_inline }}px;
+    --animation-duration: {{ block.settings.animation_duration }}s;
+    --brand-gold: {{ block.settings.brand_gold }};
+  "
+>
+  <span class="collection-title-overlay">
+    {% if block.settings.show_prefix %}
+      <span class="title-prefix">{{ block.settings.prefix_text }}</span>
+    {% endif %}
+    <span class="title-main">{{ remaining_title | default: collection_title }}</span>
+  </span>
+</div>
+
+{% stylesheet %}
+  .collection-title-overlay-wrapper {
+    position: absolute;
+    bottom: var(--overlay-bottom, 24px);
+    left: var(--overlay-left, 24px);
+    padding: var(--overlay-padding-block, 10px) var(--overlay-padding-inline, 18px);
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .collection-title-overlay-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--brand-gold, #91705E);
+    transform: translateX(-100%);
+    transition: transform var(--animation-duration, 0.7s) ease-in-out;
+    z-index: -1;
+  }
+
+  .collection-card:hover .collection-title-overlay-wrapper::before {
+    transform: translateX(0);
+  }
+
+  .collection-title-overlay {
+    position: relative;
+    font-family: var(--font-heading--family);
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color calc(var(--animation-duration, 0.7s) * 0.7) ease;
+    display: inline-flex;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .title-prefix {
+    color: #000000;
+  }
+
+  .title-main {
+    color: var(--brand-gold, #91705E);
+  }
+
+  /* Hover text turns white */
+  .collection-card:hover .collection-title-overlay,
+  .collection-card:hover .title-prefix,
+  .collection-card:hover .title-main {
+    color: #FFFFFF;
+  }
+
+  /* Optional text shadow for readability */
+  @media (min-width: 750px) {
+    .collection-title-overlay {
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  /* Mobile: No hover animation */
+  @media (hover: none) {
+    .collection-title-overlay-wrapper::before {
+      display: none;
+    }
+
+    .title-prefix {
+      color: #000000;
+    }
+
+    .title-main {
+      color: var(--brand-gold, #91705E);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .collection-title-overlay-wrapper::before {
+      transition-duration: 0.01s;
+    }
+
+    .collection-title-overlay {
+      transition-duration: 0.01s;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection Title Overlay",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Animated collection title that overlays on the collection image with a slide-in gold background on hover."
+    },
+    {
+      "type": "header",
+      "content": "Title Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prefix",
+      "label": "Show prefix word",
+      "default": true,
+      "info": "Display 'THE' before the collection name in black"
+    },
+    {
+      "type": "text",
+      "id": "prefix_text",
+      "label": "Prefix text",
+      "default": "THE",
+      "visible_if": "{{ block.settings.show_prefix }}"
+    },
+    {
+      "type": "header",
+      "content": "Position"
+    },
+    {
+      "type": "range",
+      "id": "bottom_position",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "left_position",
+      "label": "Left spacing",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "label": "Horizontal padding",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation duration",
+      "min": 0.3,
+      "max": 2.0,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.7,
+      "info": "Duration of the slide animation (0.6-0.8s recommended)"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "brand_gold",
+      "label": "Brand gold color",
+      "default": "#91705E",
+      "info": "Used for the main title text and hover background"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Title Overlay",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}
