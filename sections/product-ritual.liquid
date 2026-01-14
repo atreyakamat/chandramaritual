@@ -1,0 +1,434 @@
+{% comment %}
+  This is a custom product section for Chandrama Ritual
+  Features: Large product image, thumbnail gallery, product details, tabs
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Product Ritual",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "label": "Enable Sticky Product Info",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.product-ritual-page {
+  padding: 60px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.product-ritual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  margin-bottom: 80px;
+}
+
+/* Left: Images */
+.product-images-column {
+  position: relative;
+}
+
+.product-main-image {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f5f3ef;
+  margin-bottom: 20px;
+  overflow: hidden;
+  opacity: 0; /* GSAP */
+}
+
+.product-main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.product-main-image:hover img {
+  transform: scale(1.05);
+}
+
+.product-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  opacity: 0; /* GSAP */
+}
+
+.product-thumbnail {
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.product-thumbnail.active {
+  border-color: #1a1a1a;
+}
+
+.product-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Right: Product Info */
+.product-info-column {
+  opacity: 0; /* GSAP */
+}
+
+.product-info-column.sticky {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+}
+
+.product-title {
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  color: #1a1a1a;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #8a7355;
+}
+
+.product-availability {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #4caf50;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.product-actions {
+  margin-bottom: 30px;
+}
+
+.product-quantity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.product-quantity input {
+  width: 60px;
+  padding: 10px;
+  border: 1px solid rgba(0,0,0,0.2);
+  text-align: center;
+  font-size: 1rem;
+}
+
+.product-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-add-to-cart {
+  flex: 1;
+  padding: 18px 40px;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-family: inherit;
+}
+
+.btn-add-to-cart:hover {
+  background: #333;
+}
+
+.btn-buy-now {
+  flex: 1;
+  padding: 18px 40px;
+  background: #8a7355;
+  color: #fff;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-family: inherit;
+}
+
+.product-meta-actions {
+  display: flex;
+  gap: 20px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 30px;
+}
+
+.product-meta-actions a {
+  color: #555;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.product-meta-actions a:hover {
+  color: #1a1a1a;
+}
+
+.product-share {
+  margin-bottom: 30px;
+}
+
+.product-share-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.product-share-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.product-share-icons a {
+  color: #555;
+  transition: color 0.3s;
+}
+
+.product-meta-info {
+  border-top: 1px solid rgba(0,0,0,0.1);
+  padding-top: 30px;
+  font-size: 0.9rem;
+}
+
+.product-meta-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.product-meta-label {
+  font-weight: 500;
+  min-width: 100px;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+/* Product Tabs */
+.product-tabs {
+  border-top: 1px solid rgba(0,0,0,0.1);
+  margin-top: 80px;
+}
+
+.product-tabs-nav {
+  display: flex;
+  gap: 40px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.product-tab-button {
+  background: none;
+  border: none;
+  padding: 20px 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s;
+  font-family: inherit;
+  font-weight: 400;
+}
+
+.product-tab-button.active {
+  border-bottom-color: #1a1a1a;
+}
+
+.product-tab-content {
+  padding: 40px 0;
+  max-width: 900px;
+  line-height: 1.6;
+  display: none;
+}
+
+.product-tab-content.active {
+  display: block;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .product-ritual-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .product-info-column.sticky {
+    position: static;
+  }
+  
+  .product-title {
+    font-size: 1.5rem;
+  }
+  
+  .product-buttons {
+    flex-direction: column;
+  }
+}
+{% endstyle %}
+
+<div class="product-ritual-page" itemscope itemtype="http://schema.org/Product">
+  <div class="product-ritual-grid">
+    
+    <!-- Product Images -->
+    <div class="product-images-column">
+      <div class="product-main-image" id="mainProductImage">
+        {% if product.featured_media %}
+          {{ product.featured_media | image_url: width: 1000 | image_tag: loading: 'eager', alt: product.title }}
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag }}
+        {% endif %}
+      </div>
+      
+      <div class="product-thumbnails">
+        {% for media in product.media limit: 4 %}
+          <div class="product-thumbnail {% if forloop.first %}active{% endif %}" data-media-id="{{ media.id }}">
+            {{ media | image_url: width: 200 | image_tag: alt: product.title }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="product-info-column {% if section.settings.enable_sticky_info %}sticky{% endif %}">
+      <h1 class="product-title" itemprop="name">{{ product.title }}</h1>
+      
+      <div class="product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
+        <meta itemprop="price" content="{{ product.price | money_without_currency }}">
+        {{ product.price | money }}
+      </div>
+      
+      <div class="product-availability">
+        {% if product.available %}1 Available{% else %}Out of Stock{% endif %}
+      </div>
+
+      {% form 'product', product, class: 'product-actions' %}
+        <div class="product-quantity">
+          <label for="quantity">Quantity:</label>
+          <input type="number" id="quantity" name="quantity" value="1" min="1">
+        </div>
+
+        <div class="product-buttons">
+          <button type="submit" class="btn-add-to-cart" {% unless product.available %}disabled{% endunless %}>
+            Add to Cart
+          </button>
+          <button type="button" class="btn-buy-now">
+            Buy with Shop Pay
+          </button>
+        </div>
+      {% endform %}
+
+      <div class="product-meta-actions">
+        <a href="#">♡ Add to Wishlist</a>
+        <a href="#">⚖ Compare</a>
+      </div>
+
+      <div class="product-share">
+        <div class="product-share-label">Share:</div>
+        <div class="product-share-icons">
+          <a href="https://www.facebook.com/sharer.php?u={{ shop.url }}{{ product.url }}" target="_blank">f</a>
+          <a href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ product.url }}" target="_blank">p</a>
+        </div>
+      </div>
+
+      <div class="product-meta-info">
+        <div class="product-meta-row">
+          <span class="product-meta-label">Type:</span>
+          <span>{{ product.type | default: "Necklace" }}</span>
+        </div>
+        <div class="product-meta-row">
+          <span class="product-meta-label">Available:</span>
+          <span>{{ product.variants.first.inventory_quantity | default: "Available" }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Tabs -->
+  <div class="product-tabs">
+    <div class="product-tabs-nav">
+      <button class="product-tab-button active" data-tab="description">Description</button>
+      <button class="product-tab-button" data-tab="reviews">Reviews</button>
+    </div>
+
+    <div class="product-tab-content active" id="tab-description">
+      <div itemprop="description">
+        {{ product.description }}
+      </div>
+    </div>
+
+    <div class="product-tab-content" id="tab-reviews">
+      <p>Reviews will appear here.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    // GSAP Animations
+    if (typeof gsap !== 'undefined') {
+      gsap.to(".product-main-image", { opacity: 1, duration: 1, ease: "power2.out" });
+      gsap.to(".product-thumbnails", { opacity: 1, duration: 1, delay: 0.2, ease: "power2.out" });
+      gsap.to(".product-info-column", { opacity: 1, duration: 1, delay: 0.3, ease: "power2.out" });
+    }
+
+    // Thumbnail Gallery
+    const thumbnails = document.querySelectorAll('.product-thumbnail');
+    const mainImage = document.getElementById('mainProductImage');
+    
+    thumbnails.forEach(thumb => {
+      thumb.addEventListener('click', function() {
+        thumbnails.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        const img = this.querySelector('img');
+        const newSrc = img.src.replace(/width=\d+/, 'width=1000');
+        mainImage.querySelector('img').src = newSrc;
+      });
+    });
+
+    // Product Tabs
+    const tabButtons = document.querySelectorAll('.product-tab-button');
+    const tabContents = document.querySelectorAll('.product-tab-content');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const tabName = this.getAttribute('data-tab');
+        
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        this.classList.add('active');
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+      });
+    });
+  });
+</script>

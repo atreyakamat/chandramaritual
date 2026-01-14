@@ -1,0 +1,217 @@
+{% schema %}
+{
+  "name": "Shop By Collection Ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop By Collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Image (Optional)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_hover",
+          "label": "Hover/Swap Image (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Title (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Collection Ritual",
+      "blocks": [
+        { "type": "collection_item" },
+        { "type": "collection_item" },
+        { "type": "collection_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.collection-shop-ritual {
+  padding: 80px 20px;
+  background-color: #faf9f6;
+}
+
+.collection-grid-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 60px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.collection-card {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: #333;
+  overflow: hidden;
+}
+
+.collection-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.collection-img, .collection-img-hover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.8s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.collection-img-hover {
+  opacity: 0;
+  z-index: 2;
+}
+
+/* On hover, if hover image exists, show it */
+.collection-card:hover .collection-img-hover.has-hover-image {
+  opacity: 1;
+}
+
+.collection-card h3 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 15px;
+  transition: all 0.4s ease;
+}
+{% endstyle %}
+
+<section class="collection-shop-ritual">
+  <h2 class="collection-grid-title">{{ section.settings.title }}</h2>
+  
+  <div class="collection-grid">
+    {% for block in section.blocks %}
+      {% assign collection = collections[block.settings.collection] %}
+      {% assign image = block.settings.image | default: collection.image | default: collection.products.first.featured_image %}
+      {% assign image_hover = block.settings.image_hover %}
+      {% assign title = block.settings.title | default: collection.title | default: "Collection" %}
+      
+      <a href="{{ collection.url | default: '#' }}" class="collection-card" {{ block.shopify_attributes }}>
+        <div class="collection-image-wrapper">
+          {% if image %}
+            <img class="collection-img" src="{{ image | image_url: width: 600 }}" 
+                 alt="{{ title | escape }}" 
+                 loading="lazy" 
+                 width="{{ image.width }}" 
+                 height="{{ image.height }}">
+            
+            {% if image_hover %}
+              <img class="collection-img-hover has-hover-image" src="{{ image_hover | image_url: width: 600 }}" 
+                   alt="{{ title | escape }} - Hover" 
+                   loading="lazy" 
+                   width="{{ image_hover.width }}" 
+                   height="{{ image_hover.height }}">
+            {% endif %}
+          {% else %}
+            {{ 'collection-1' | placeholder_svg_tag: 'collection-img' }}
+          {% endif %}
+        </div>
+        <h3>{{ title }}</h3>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+       // Entrance Animation
+       gsap.from(".collection-card", {
+          scrollTrigger: {
+             trigger: ".collection-grid",
+             start: "top 85%"
+          },
+          opacity: 0,
+          y: 30,
+          stagger: 0.1,
+          duration: 1,
+          ease: "power2.out"
+       });
+
+       // Only enable GSAP object/text hover animations on desktop
+       // The Image Swap is handled via CSS for performance & simplicity (opacity fade)
+       if (window.matchMedia("(min-width: 769px)").matches) {
+          document.querySelectorAll(".collection-card").forEach(card => {
+            const imgMain = card.querySelector(".collection-img");
+            // wrapper scale for zoom effect
+            const wrapper = card.querySelector(".collection-image-wrapper");
+
+            card.addEventListener("mouseenter", () => {
+              // Letter spacing expansion for Title
+              gsap.to(card.querySelector("h3"), {
+                letterSpacing: "0.2em",
+                color: "#555",
+                duration: 0.6,
+                ease: "power2.out"
+              });
+              // Subtle scale of the container or images
+              gsap.to([imgMain, card.querySelector(".collection-img-hover")], {
+                scale: 1.05,
+                duration: 0.8,
+                ease: "power2.out"
+              });
+            });
+
+            card.addEventListener("mouseleave", () => {
+              gsap.to(card.querySelector("h3"), {
+                letterSpacing: "0.1em",
+                color: "#333",
+                duration: 0.6,
+                ease: "power2.out"
+              });
+              gsap.to([imgMain, card.querySelector(".collection-img-hover")], {
+                scale: 1,
+                duration: 0.8,
+                ease: "power2.out"
+              });
+            });
+          });
+       }
+    }
+  });
+</script>

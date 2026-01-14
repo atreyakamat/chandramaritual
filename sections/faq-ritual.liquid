@@ -1,0 +1,271 @@
+{% schema %}
+{
+  "name": "FAQ Ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#fcfbf9"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question text"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Answer text goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Ritual",
+      "blocks": [
+        {
+            "type": "faq_item",
+            "settings": { "question": "Do you ship with a tracking code?", "answer": "Yes, all orders are shipped with a tracking number which will be emailed to you upon dispatch." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "How can I track my order?", "answer": "You can track your order using the link provided in your shipping confirmation email." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "Do you offer international shipping?", "answer": "Yes, we ship worldwide. Shipping costs and times vary by location." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "Can I modify or cancel my order?", "answer": "Please contact us within 24 hours of placing your order if you need to make changes." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "Do you make custom orders?", "answer": "Yes, we accept a limited number of custom ritual commissions per month. Please contact us for availability." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "What payment methods do you accept?", "answer": "We accept major credit cards (Visa, Mastercard, Amex), PayPal, and Apple Pay." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "What are the shipping costs?", "answer": "Shipping is free for orders over $200. For orders under $200, shipping is calculated at checkout based on your location." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "How long does shipping take?", "answer": "Domestic orders typically arrive within 3-5 business days. International orders can take 7-14 business days." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "What is your return policy?", "answer": "We accept returns for exchanges or store credit within 30 days of delivery, provided items are unworn." }
+        },
+        {
+            "type": "faq_item",
+            "settings": { "question": "How can I contact you?", "answer": "You can reach us via our contact page form or email us directly at hello@chandramaritual.com." }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.faq-ritual-section {
+  padding: 80px 20px;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-heading {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 50px;
+  letter-spacing: 0.05em;
+  opacity: 0; /* GSAP */
+  transform: translateY(30px);
+}
+
+.faq-item {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  opacity: 0; /* GSAP */
+  transform: translateY(20px);
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 20px 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: inherit;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.faq-question:hover {
+  color: #666;
+}
+
+.faq-icon {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.4s ease;
+}
+
+.faq-icon::before {
+  width: 100%;
+  height: 1px;
+}
+
+.faq-icon::after {
+  width: 1px;
+  height: 100%;
+}
+
+.faq-item.active .faq-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg); /* collapse to minus */
+}
+
+/* For GSAP, we will handle the icon rotation manually for smoother control if desired,
+   but CSS transition combined with GSAP height anim is often cleanest. */
+
+.faq-answer {
+  height: 0;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #555;
+  line-height: 1.6;
+}
+
+.faq-answer-inner {
+  padding-bottom: 25px;
+}
+{% endstyle %}
+
+<section class="faq-ritual-section" style="background-color: {{ section.settings.bg_color }}">
+  <div class="faq-container">
+    <h2 class="faq-heading">{{ section.settings.title }}</h2>
+    
+    {% for block in section.blocks %}
+      <div class="faq-item">
+        <button class="faq-question">
+          <span>{{ block.settings.question }}</span>
+          <div class="faq-icon"></div>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            {{ block.settings.answer | newline_to_br }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+       
+       // Entrance Animation
+       const section = document.querySelector('.faq-ritual-section');
+       
+       gsap.to(".faq-heading", {
+          scrollTrigger: {
+             trigger: ".faq-ritual-section",
+             start: "top 80%"
+          },
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out"
+       });
+
+       gsap.to(".faq-item", {
+          scrollTrigger: {
+             trigger: ".faq-ritual-section",
+             start: "top 80%"
+          },
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 1,
+          ease: "power3.out"
+       });
+
+       // Accordion Logic
+       const items = document.querySelectorAll('.faq-item');
+       
+       items.forEach(item => {
+          const question = item.querySelector('.faq-question');
+          const answer = item.querySelector('.faq-answer');
+          const iconAfter = item.querySelector('.faq-icon'); // We'll animate the rotation
+          
+          question.addEventListener('click', () => {
+             const isActive = item.classList.contains('active');
+             
+             // Close all others (optional - strictly requested 'accordion' usually implies one open at a time, but allowing multiple is friendlier)
+             // Let's allow multiple for now, or uncomment below to close others:
+             /*
+             items.forEach(otherItem => {
+                if (otherItem !== item && otherItem.classList.contains('active')) {
+                   otherItem.classList.remove('active');
+                   gsap.to(otherItem.querySelector('.faq-answer'), { height: 0, duration: 0.4, ease: "power2.inOut" });
+                   gsap.to(otherItem.querySelector('.faq-icon'), { rotation: 0, duration: 0.4 });
+                }
+             });
+             */
+
+             if (isActive) {
+                item.classList.remove('active');
+                gsap.to(answer, { height: 0, duration: 0.5, ease: "power2.inOut" });
+                gsap.to(iconAfter, { rotation: 0, duration: 0.5 });
+             } else {
+                item.classList.add('active');
+                gsap.set(answer, { height: "auto" }); // Get natural height
+                gsap.from(answer, { height: 0, duration: 0.5, ease: "back.out(1.7)" }); // "Crazy" little bounce/overshoot
+                gsap.to(iconAfter, { rotation: 135, duration: 0.5, ease: "back.out(1.7)" }); // 135deg for a nice X effect
+             }
+          });
+       });
+    }
+  });
+</script>

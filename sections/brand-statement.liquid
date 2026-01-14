@@ -1,0 +1,70 @@
+{% schema %}
+{
+  "name": "Brand Statement",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "statement",
+      "label": "Statement Text",
+      "default": "Chandrama Ritual is a space where adornment becomes devotion and jewelry is shaped as remembrance. Each piece is created with intention, meant to be lived in, worn slowly, and chosen by feeling rather than trend."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Statement"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.brand-statement-section {
+  padding: 80px 20px;
+  background-color: #fcfbf9;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-copy {
+  max-width: 800px;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.6;
+  opacity: 0; /* Hidden initially for GSAP */
+  transform: translateY(20px);
+}
+
+@media (max-width: 768px) {
+    .brand-statement-section {
+        padding: 60px 20px;
+    }
+    .brand-copy {
+        font-size: 1.2rem;
+    }
+}
+{% endstyle %}
+
+<section class="brand-statement-section">
+  <div class="brand-copy">
+    {{ section.settings.statement }}
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      gsap.from(".brand-copy", {
+        scrollTrigger: {
+            trigger: ".brand-copy",
+            start: "top 80%"
+        },
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        ease: "power2.out"
+      });
+    }
+  });
+</script>

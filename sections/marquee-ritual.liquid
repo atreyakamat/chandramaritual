@@ -1,0 +1,101 @@
+{% schema %}
+{
+  "name": "Marquee Ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text_content",
+      "label": "Marquee Text",
+      "default": "Adornment as devotion ✦ Jewelry as remembrance ✦ Worn with intention"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Ritual"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.marquee-section {
+  padding: 20px 0;
+  background-color: #fcfbf9;
+  border-top: none;
+  border-bottom: none;
+  overflow: hidden;
+}
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: inherit; /* Use theme font */
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #333; /* Dark gray for elegance */
+}
+
+.marquee span {
+  display: inline-block;
+  padding-left: 100%; /* Start off-screen */
+  animation: scroll 30s linear infinite;
+}
+
+/* Duplicating content via CSS or JS is often needed for seamless loops, 
+   but for the prompt's specific request "Lightweight", strict CSS scroll: */
+.marquee-content {
+    display: inline-block;
+    animation: scroll 30s linear infinite;
+    padding-right: 50px;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* Disable animation on mobile or prefers-reduced-motion */
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+  .marquee-content {
+    animation: none;
+    white-space: normal;
+    text-align: center;
+    display: block;
+    transform: none;
+    width: 100%;
+    padding: 0 20px;
+  }
+}
+{% endstyle %}
+
+<section class="marquee-section">
+  <div class="marquee">
+    <!-- Duplicate creating a seamless loop effect requires typically 2 copies. 
+         We will place enough copies to fill the screen or use the liquid loop if we wanted.
+         For simple CSS marquee as requested:
+    -->
+    <div class="marquee-track" style="display: flex; white-space: nowrap; width: fit-content;">
+       <span class="marquee-content">{{ section.settings.text_content }}</span>
+       <span class="marquee-content">{{ section.settings.text_content }}</span>
+       <span class="marquee-content">{{ section.settings.text_content }}</span>
+       <span class="marquee-content">{{ section.settings.text_content }}</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.from(".marquee-section", {
+          scrollTrigger: {
+              trigger: ".marquee-section",
+              start: "top 90%"
+          },
+          opacity: 0,
+          duration: 1.2,
+          ease: "power2.out"
+        });
+    }
+  });
+</script>
