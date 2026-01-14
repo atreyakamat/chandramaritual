@@ -1,3 +1,16 @@
+{%- comment -%}
+  Collection Title Overlay Animation
+  
+  Displays an animated collection title that overlays on collection images.
+  Features a two-tone typography treatment with a sliding gold background on hover.
+  
+  CSS Styles: Located in assets/base.css (search for "Collection Title Overlay Animation")
+  
+  @param block.settings.show_prefix - Show prefix word before collection name
+  @param block.settings.use_custom_split - Use custom text instead of automatic splitting
+  @param block.settings.brand_gold - Brand gold color (default: #91705E)
+{%- endcomment -%}
+
 {% liquid
   if closest.collection == blank
     assign collection_title = 'placeholders.collection_title' | t
@@ -48,92 +61,6 @@
     <span class="title-main">{{ main_text }}</span>
   </span>
 </div>
-
-{% stylesheet %}
-  .collection-title-overlay-wrapper {
-    position: absolute;
-    bottom: var(--overlay-bottom, 24px);
-    left: var(--overlay-left, 24px);
-    padding: var(--overlay-padding-block, 10px) var(--overlay-padding-inline, 18px);
-    overflow: hidden;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  .collection-title-overlay-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: var(--brand-gold, #91705E);
-    transform: translateX(-100%);
-    transition: transform var(--animation-duration, 0.7s) ease-in-out;
-    z-index: -1;
-  }
-
-  .collection-card:hover .collection-title-overlay-wrapper::before {
-    transform: translateX(0);
-  }
-
-  .collection-title-overlay {
-    position: relative;
-    font-family: var(--font-heading--family);
-    font-size: 1.2rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color calc(var(--animation-duration, 0.7s) * 0.7) ease;
-    display: inline-flex;
-    gap: 6px;
-    white-space: nowrap;
-  }
-
-  .title-prefix {
-    color: #000000;
-  }
-
-  .title-main {
-    color: var(--brand-gold, #91705E);
-  }
-
-  /* Hover text turns white */
-  .collection-card:hover .collection-title-overlay,
-  .collection-card:hover .title-prefix,
-  .collection-card:hover .title-main {
-    color: #FFFFFF;
-  }
-
-  /* Optional text shadow for readability */
-  @media (min-width: 750px) {
-    .collection-title-overlay {
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-  }
-
-  /* Mobile: No hover animation */
-  @media (hover: none) {
-    .collection-title-overlay-wrapper::before {
-      display: none;
-    }
-
-    .title-prefix {
-      color: #000000;
-    }
-
-    .title-main {
-      color: var(--brand-gold, #91705E);
-    }
-  }
-
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    .collection-title-overlay-wrapper::before {
-      transition-duration: 0.01s;
-    }
-
-    .collection-title-overlay {
-      transition-duration: 0.01s;
-    }
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

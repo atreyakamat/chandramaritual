@@ -7,18 +7,28 @@
 1. **`blocks/collection-title-overlay.liquid`** (Main Block)
    - Liquid template for the animated collection title
    - Full schema with customization options
-   - Embedded CSS styles
    - Support for both automatic and manual title splitting
    - Mobile-safe hover detection
    - Accessibility features (reduced motion support)
+   - **Note:** CSS styles are now in `assets/base.css`
 
-2. **`assets/collection-title-overlay.css`** (Optional Standalone CSS)
-   - Comprehensive CSS for the overlay animation
+### Files Modified
+
+1. **`assets/base.css`** (CSS Added)
+   - Added collection title overlay animation styles
+   - Comprehensive CSS at the end of the file
    - Responsive design (desktop, tablet, mobile)
    - Performance optimizations
    - Accessibility improvements
+   - Search for "Collection Title Overlay Animation" to find the section
 
-3. **`COLLECTION_TITLE_OVERLAY_GUIDE.md`** (Documentation)
+2. **`blocks/_collection-card.liquid`** (Block Type Added)
+   - Added `collection-title-overlay` to allowed block types
+   - Now supports the new overlay block within collection cards
+
+### Documentation Files
+
+3. **`COLLECTION_TITLE_OVERLAY_GUIDE.md`** (Full Documentation)
    - Detailed implementation guide
    - Technical specifications
    - Customization examples
@@ -36,12 +46,6 @@
    - Real-time configuration controls
    - 4 example collection cards
    - Interactive sliders for testing different settings
-
-### Files Modified
-
-1. **`blocks/_collection-card.liquid`**
-   - Added `collection-title-overlay` to allowed block types
-   - Now supports the new overlay block within collection cards
 
 ---
 
@@ -224,7 +228,7 @@ The animation feels like **"a veil passing over the title"** rather than a butto
 ## 📊 Performance Metrics
 
 - **Animation FPS:** 60fps (GPU-accelerated)
-- **CSS Size:** ~4KB (inline in block)
+- **CSS Size:** ~4KB (in base.css)
 - **JavaScript:** 0 bytes (pure CSS)
 - **Render Cost:** Minimal (single `transform` and `color` transition)
 
@@ -253,7 +257,7 @@ The animation feels like **"a veil passing over the title"** rather than a butto
 - **Quick Setup:** `QUICK_SETUP_COLLECTION_OVERLAY.md`
 - **Interactive Demo:** `demo-collection-overlay.html`
 - **Block File:** `blocks/collection-title-overlay.liquid`
-- **CSS File:** `assets/collection-title-overlay.css`
+- **CSS Location:** `assets/base.css` (search for "Collection Title Overlay Animation")
 
 ---
 
