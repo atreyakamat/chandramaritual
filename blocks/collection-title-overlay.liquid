@@ -5,11 +5,29 @@
     assign collection_title = closest.collection.title
   endif
 
-  # Split title into parts - "THE" prefix and the rest
-  assign title_words = collection_title | split: ' '
-  assign first_word = title_words.first
-  assign remaining_words = title_words | shift
-  assign remaining_title = remaining_words | join: ' '
+  # Determine how to split the title
+  if block.settings.use_custom_split
+    # Use custom text provided by merchant
+    assign prefix_text = block.settings.custom_prefix
+    assign main_text = block.settings.custom_main | default: collection_title
+  elsif block.settings.show_prefix
+    # Auto-split: use first word as prefix
+    assign title_words = collection_title | split: ' '
+    assign prefix_text = block.settings.prefix_text | default: title_words.first
+    
+    if title_words.size > 1
+      assign remaining_words = title_words | shift
+      assign main_text = remaining_words | join: ' '
+    else
+      # If only one word, show it all as main
+      assign prefix_text = ''
+      assign main_text = collection_title
+    endif
+  else
+    # No prefix, show entire title as main
+    assign prefix_text = ''
+    assign main_text = collection_title
+  endif
 %}
 
 <div
@@ -24,10 +42,10 @@
   "
 >
   <span class="collection-title-overlay">
-    {% if block.settings.show_prefix %}
-      <span class="title-prefix">{{ block.settings.prefix_text }}</span>
+    {% if prefix_text != blank %}
+      <span class="title-prefix">{{ prefix_text }}</span>
     {% endif %}
-    <span class="title-main">{{ remaining_title | default: collection_title }}</span>
+    <span class="title-main">{{ main_text }}</span>
   </span>
 </div>
 
