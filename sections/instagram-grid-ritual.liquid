@@ -1,0 +1,178 @@
+{% comment %}
+  Chandrama Ritual — Instagram Grid Section
+  Cleaner design inspired by references
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Instagram Grid Ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Follow Our Journey"
+    },
+    {
+      "type": "text",
+      "id": "handle",
+      "label": "Instagram Handle",
+      "default": "@chandramaritual"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Instagram URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Post Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Grid Ritual",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.instagram-grid-ritual {
+  padding: 100px 0;
+  background: #faf9f6;
+}
+
+.instagram-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 0 40px;
+}
+
+.instagram-heading {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2.5rem;
+  font-weight: 300;
+  margin-bottom: 15px;
+  color: #1a1a1a;
+  text-transform: none;
+}
+
+.instagram-handle {
+  font-size: 1rem;
+  color: #8a7355;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+}
+
+.instagram-handle:hover {
+  text-decoration: underline;
+}
+
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+}
+
+.instagram-item {
+  aspect-ratio: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.instagram-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.instagram-item:hover img {
+  transform: scale(1.1);
+}
+
+.instagram-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.instagram-item:hover .instagram-overlay {
+  opacity: 1;
+}
+
+.instagram-overlay svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+}
+
+@media (max-width: 768px) {
+  .instagram-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .instagram-heading {
+    font-size: 2rem;
+  }
+}
+</style>
+
+<section class="instagram-grid-ritual">
+  <div class="instagram-header">
+    <h2 class="instagram-heading">{{ section.settings.heading }}</h2>
+    <a href="{{ section.settings.url | default: '#' }}" class="instagram-handle" target="_blank">
+      {{ section.settings.handle }}
+    </a>
+  </div>
+  
+  <div class="instagram-grid">
+    {% for block in section.blocks limit: 6 %}
+      <a href="{{ block.settings.link | default: section.settings.url }}" 
+         class="instagram-item" 
+         target="_blank"
+         {{ block.shopify_attributes }}>
+        {% if block.settings.image %}
+          <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Instagram post" loading="lazy">
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag }}
+        {% endif %}
+        
+        <div class="instagram-overlay">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>

@@ -1,77 +1,106 @@
 {% comment %}
-  This is a custom product section for Chandrama Ritual
-  Features: Large product image, thumbnail gallery, product details, tabs
+  Chandrama Ritual — Editorial Product Page
+  Calm, ritual-led, editorial design
 {% endcomment %}
 
 {% schema %}
 {
-  "name": "Product Ritual",
+  "name": "Product Ritual - Editorial",
   "settings": [
     {
       "type": "checkbox",
-      "id": "enable_sticky_info",
-      "label": "Enable Sticky Product Info",
+      "id": "show_collection_subline",
+      "label": "Show Collection Subline",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "microcopy",
+      "label": "CTA Microcopy",
+      "default": "Chosen slowly. Made to be lived in."
+    },
+    {
+      "type": "text",
+      "id": "related_heading",
+      "label": "Related Products Heading",
+      "default": "Related offerings"
     }
   ]
 }
 {% endschema %}
 
 {% style %}
-.product-ritual-page {
-  padding: 60px 20px;
-  max-width: 1400px;
+/* ========================================
+   PRODUCT RITUAL — EDITORIAL STYLE
+   ======================================== */
+
+.product-ritual-editorial {
+  background-color: #faf9f6;
+  padding: 40px 20px 100px;
+}
+
+.product-ritual-container {
+  max-width: 1300px;
   margin: 0 auto;
 }
 
-.product-ritual-grid {
+/* Main Grid Layout */
+.product-main-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
-  margin-bottom: 80px;
+  margin-bottom: 100px;
 }
 
-/* Left: Images */
-.product-images-column {
+/* ========================================
+   LEFT COLUMN — IMAGE GALLERY
+   ======================================== */
+
+.product-gallery {
   position: relative;
+}
+
+.product-main-image-container {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #f5f3ef;
 }
 
 .product-main-image {
   width: 100%;
-  aspect-ratio: 1;
-  background: #f5f3ef;
-  margin-bottom: 20px;
-  overflow: hidden;
-  opacity: 0; /* GSAP */
-}
-
-.product-main-image img {
-  width: 100%;
-  height: 100%;
+  aspect-ratio: 3/4;
   object-fit: cover;
+  display: block;
   transition: transform 0.6s ease;
+  cursor: zoom-in;
 }
 
-.product-main-image:hover img {
-  transform: scale(1.05);
+/* Soft zoom on hover — Desktop only */
+@media (min-width: 769px) {
+  .product-main-image-container:hover .product-main-image {
+    transform: scale(1.04);
+  }
 }
 
 .product-thumbnails {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  opacity: 0; /* GSAP */
+  gap: 12px;
 }
 
 .product-thumbnail {
   aspect-ratio: 1;
   overflow: hidden;
   cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
   border: 2px solid transparent;
-  transition: border-color 0.3s;
 }
 
-.product-thumbnail.active {
+.product-thumbnail.active,
+.product-thumbnail:hover {
+  opacity: 1;
   border-color: #1a1a1a;
 }
 
@@ -81,325 +110,591 @@
   object-fit: cover;
 }
 
-/* Right: Product Info */
-.product-info-column {
-  opacity: 0; /* GSAP */
-}
+/* ========================================
+   RIGHT COLUMN — PRODUCT INFO
+   ======================================== */
 
-.product-info-column.sticky {
+.product-info {
   position: sticky;
   top: 120px;
   align-self: start;
 }
 
-.product-title {
-  font-size: 2rem;
-  font-weight: 300;
-  margin-bottom: 20px;
-  letter-spacing: 0.05em;
+/* Title */
+.product-title-ritual {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 10px;
   color: #1a1a1a;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
-.product-price {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+/* Collection Subline */
+.product-collection-subline {
+  font-size: 0.85rem;
   color: #8a7355;
-}
-
-.product-availability {
-  font-size: 0.85rem;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #4caf50;
-  margin-bottom: 30px;
-  font-weight: 500;
-}
-
-.product-actions {
-  margin-bottom: 30px;
-}
-
-.product-quantity {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.product-quantity input {
-  width: 60px;
-  padding: 10px;
-  border: 1px solid rgba(0,0,0,0.2);
-  text-align: center;
-  font-size: 1rem;
-}
-
-.product-buttons {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.btn-add-to-cart {
-  flex: 1;
-  padding: 18px 40px;
-  background: #1a1a1a;
-  color: #fff;
-  border: none;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.3s;
-  font-family: inherit;
-}
-
-.btn-add-to-cart:hover {
-  background: #333;
-}
-
-.btn-buy-now {
-  flex: 1;
-  padding: 18px 40px;
-  background: #8a7355;
-  color: #fff;
-  border: none;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.3s;
-  font-family: inherit;
-}
-
-.product-meta-actions {
-  display: flex;
-  gap: 20px;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 30px;
-}
-
-.product-meta-actions a {
-  color: #555;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.product-meta-actions a:hover {
-  color: #1a1a1a;
-}
-
-.product-share {
-  margin-bottom: 30px;
-}
-
-.product-share-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.product-share-icons {
-  display: flex;
-  gap: 15px;
-}
-
-.product-share-icons a {
-  color: #555;
-  transition: color 0.3s;
-}
-
-.product-meta-info {
-  border-top: 1px solid rgba(0,0,0,0.1);
-  padding-top: 30px;
-  font-size: 0.9rem;
-}
-
-.product-meta-row {
-  display: flex;
-  margin-bottom: 10px;
-}
-
-.product-meta-label {
-  font-weight: 500;
-  min-width: 100px;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-}
-
-/* Product Tabs */
-.product-tabs {
-  border-top: 1px solid rgba(0,0,0,0.1);
-  margin-top: 80px;
-}
-
-.product-tabs-nav {
-  display: flex;
-  gap: 40px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-}
-
-.product-tab-button {
-  background: none;
-  border: none;
-  padding: 20px 0;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.3s;
-  font-family: inherit;
+  margin-bottom: 25px;
   font-weight: 400;
 }
 
-.product-tab-button.active {
-  border-bottom-color: #1a1a1a;
+/* Price — Lighter, smaller */
+.product-price-ritual {
+  font-size: 1.3rem;
+  color: #666;
+  font-weight: 300;
+  margin-bottom: 40px;
 }
 
-.product-tab-content {
-  padding: 40px 0;
-  max-width: 900px;
-  line-height: 1.6;
-  display: none;
+.product-price-ritual .compare-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 1rem;
+  margin-right: 10px;
 }
 
-.product-tab-content.active {
-  display: block;
+/* CTA Area */
+.product-cta-area {
+  margin-bottom: 30px;
 }
 
-/* Mobile */
+.product-form-ritual {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Quantity */
+.product-quantity-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.product-quantity-wrapper label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #555;
+}
+
+.product-quantity-wrapper input {
+  width: 70px;
+  padding: 12px;
+  border: 1px solid rgba(0,0,0,0.15);
+  text-align: center;
+  font-size: 1rem;
+  background: #fff;
+}
+
+/* Primary CTA — Earth-toned, rounded */
+.btn-add-to-cart-ritual {
+  width: 100%;
+  padding: 20px 40px;
+  background: #5c4a3d;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-family: inherit;
+}
+
+.btn-add-to-cart-ritual:hover {
+  background: #4a3c32;
+}
+
+.btn-add-to-cart-ritual:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Hide/Reduce Shop Pay */
+.shopify-payment-button {
+  display: none !important;
+}
+
+/* CTA Microcopy */
+.cta-microcopy {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #888;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* ========================================
+   ACCORDIONS (Replace Tabs)
+   ======================================== */
+
+.product-accordions {
+  margin-top: 50px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.product-accordion {
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.accordion-header {
+  width: 100%;
+  padding: 25px 0;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.accordion-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.accordion-icon {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #888;
+  transition: transform 0.3s ease;
+}
+
+.product-accordion.open .accordion-icon {
+  transform: rotate(45deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 0;
+}
+
+.product-accordion.open .accordion-content {
+  max-height: 500px;
+  padding: 0 0 30px;
+}
+
+.accordion-content-inner {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #555;
+  font-weight: 300;
+}
+
+.accordion-content-inner ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.accordion-content-inner li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.accordion-content-inner li:last-child {
+  border-bottom: none;
+}
+
+/* ========================================
+   RELATED OFFERINGS
+   ======================================== */
+
+.related-offerings {
+  margin-top: 100px;
+  padding-top: 80px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.related-offerings-heading {
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 60px;
+  color: #1a1a1a;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.related-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.related-product-card {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.related-product-image {
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #f5f3ef;
+}
+
+.related-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.related-product-card:hover .related-product-image img {
+  transform: scale(1.03);
+}
+
+.related-product-title {
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.related-product-title a {
+  color: #333;
+  text-decoration: none;
+}
+
+.related-product-price {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+  font-weight: 300;
+}
+
+/* No discount badges */
+.related-product-card .badge,
+.related-product-card .discount {
+  display: none !important;
+}
+
+/* ========================================
+   MOBILE STYLES
+   ======================================== */
+
 @media (max-width: 900px) {
-  .product-ritual-grid {
+  .product-main-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
   
-  .product-info-column.sticky {
+  .product-info {
     position: static;
   }
   
-  .product-title {
-    font-size: 1.5rem;
+  .product-title-ritual {
+    font-size: 1.8rem;
   }
   
-  .product-buttons {
+  .related-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* Mobile Sticky CTA */
+@media (max-width: 768px) {
+  .mobile-sticky-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 15px 20px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .mobile-sticky-cta .btn-add-to-cart-ritual {
+    flex: 1;
+    padding: 16px;
+  }
+  
+  .mobile-sticky-cta .mobile-price {
+    display: flex;
     flex-direction: column;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #1a1a1a;
+    font-weight: 500;
+  }
+  
+  /* Hide desktop CTA on mobile */
+  .product-cta-area {
+    display: none;
+  }
+  
+  /* Add padding for sticky bar */
+  .product-ritual-editorial {
+    padding-bottom: 140px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-sticky-cta {
+    display: none;
+  }
+}
+
+/* Disable hover zoom on mobile */
+@media (max-width: 768px) {
+  .product-main-image-container:hover .product-main-image {
+    transform: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .product-main-image,
+  .related-product-image img {
+    transition: none;
   }
 }
 {% endstyle %}
 
-<div class="product-ritual-page" itemscope itemtype="http://schema.org/Product">
-  <div class="product-ritual-grid">
+<div class="product-ritual-editorial" itemscope itemtype="http://schema.org/Product">
+  <div class="product-ritual-container">
     
-    <!-- Product Images -->
-    <div class="product-images-column">
-      <div class="product-main-image" id="mainProductImage">
-        {% if product.featured_media %}
-          {{ product.featured_media | image_url: width: 1000 | image_tag: loading: 'eager', alt: product.title }}
-        {% else %}
-          {{ 'product-1' | placeholder_svg_tag }}
-        {% endif %}
-      </div>
+    <!-- Main Product Grid -->
+    <div class="product-main-grid">
       
-      <div class="product-thumbnails">
-        {% for media in product.media limit: 4 %}
-          <div class="product-thumbnail {% if forloop.first %}active{% endif %}" data-media-id="{{ media.id }}">
-            {{ media | image_url: width: 200 | image_tag: alt: product.title }}
+      <!-- Left: Image Gallery -->
+      <div class="product-gallery">
+        <div class="product-main-image-container">
+          {% if product.featured_media %}
+            <img id="mainProductImage" 
+                 class="product-main-image" 
+                 src="{{ product.featured_media | image_url: width: 1200 }}" 
+                 alt="{{ product.title | escape }}"
+                 loading="eager"
+                 itemprop="image">
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'product-main-image' }}
+          {% endif %}
+        </div>
+        
+        <div class="product-thumbnails">
+          {% for media in product.media limit: 4 %}
+            <div class="product-thumbnail {% if forloop.first %}active{% endif %}" 
+                 data-index="{{ forloop.index0 }}"
+                 data-src="{{ media | image_url: width: 1200 }}">
+              <img src="{{ media | image_url: width: 200 }}" 
+                   alt="{{ product.title | escape }} - Image {{ forloop.index }}"
+                   loading="lazy">
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Right: Product Info -->
+      <div class="product-info">
+        
+        <!-- Title -->
+        <h1 class="product-title-ritual" itemprop="name">{{ product.title }}</h1>
+        
+        <!-- Collection Subline -->
+        {% if section.settings.show_collection_subline and product.collections.first %}
+          <div class="product-collection-subline">
+            From the {{ product.collections.first.title }}
           </div>
-        {% endfor %}
+        {% endif %}
+        
+        <!-- Price -->
+        <div class="product-price-ritual" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+          <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
+          <meta itemprop="price" content="{{ product.price | money_without_currency }}">
+          {% if product.compare_at_price > product.price %}
+            <span class="compare-price">{{ product.compare_at_price | money }}</span>
+          {% endif %}
+          {{ product.price | money }}
+        </div>
+
+        <!-- CTA Area (Desktop) -->
+        <div class="product-cta-area">
+          {% form 'product', product, class: 'product-form-ritual' %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            
+            <div class="product-quantity-wrapper">
+              <label for="quantity">Quantity</label>
+              <input type="number" id="quantity" name="quantity" value="1" min="1">
+            </div>
+
+            <button type="submit" 
+                    class="btn-add-to-cart-ritual" 
+                    {% unless product.available %}disabled{% endunless %}>
+              {% if product.available %}
+                Add to Cart
+              {% else %}
+                Sold Out
+              {% endif %}
+            </button>
+            
+            {% if section.settings.microcopy != blank %}
+              <p class="cta-microcopy">{{ section.settings.microcopy }}</p>
+            {% endif %}
+          {% endform %}
+        </div>
+
+        <!-- Accordions -->
+        <div class="product-accordions">
+          
+          <!-- Accordion 1: About the Piece (Open by default) -->
+          <div class="product-accordion open">
+            <button class="accordion-header" type="button" aria-expanded="true">
+              <span class="accordion-title">About the piece</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <div class="accordion-content-inner" itemprop="description">
+                {{ product.description | strip_html | truncatewords: 100 }}
+                <p style="margin-top: 20px; font-style: italic; color: #8a7355;">
+                  This piece draws from ancestral symbolism and traditional forms, carrying meaning through material, shape, and intention.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordion 2: Product Details -->
+          <div class="product-accordion">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span class="accordion-title">Product Details</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <div class="accordion-content-inner">
+                <ul>
+                  <li><strong>Type:</strong> {{ product.type | default: 'Jewelry' }}</li>
+                  <li><strong>Material:</strong> {{ product.metafields.custom.material | default: 'Sterling Silver / Gold Plated' }}</li>
+                  <li><strong>Availability:</strong> {% if product.available %}In Stock{% else %}Made to Order{% endif %}</li>
+                  {% if product.variants.first.weight > 0 %}
+                    <li><strong>Weight:</strong> {{ product.variants.first.weight | weight_with_unit }}</li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordion 3: Care & Wearing -->
+          <div class="product-accordion">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span class="accordion-title">Care & Wearing</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <div class="accordion-content-inner">
+                <p>Treat each piece with reverence. Store in a dry, sacred space when not worn.</p>
+                <ul style="margin-top: 15px;">
+                  <li>Avoid contact with water, lotions, and perfumes</li>
+                  <li>Use a soft polishing cloth to restore shine</li>
+                  <li>Cleanse gemstones under the full moon or with sage</li>
+                  <li>Store in a clean, dry location</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <!-- Product Info -->
-    <div class="product-info-column {% if section.settings.enable_sticky_info %}sticky{% endif %}">
-      <h1 class="product-title" itemprop="name">{{ product.title }}</h1>
-      
-      <div class="product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-        <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
-        <meta itemprop="price" content="{{ product.price | money_without_currency }}">
-        {{ product.price | money }}
-      </div>
-      
-      <div class="product-availability">
-        {% if product.available %}1 Available{% else %}Out of Stock{% endif %}
-      </div>
-
-      {% form 'product', product, class: 'product-actions' %}
-        <div class="product-quantity">
-          <label for="quantity">Quantity:</label>
-          <input type="number" id="quantity" name="quantity" value="1" min="1">
-        </div>
-
-        <div class="product-buttons">
-          <button type="submit" class="btn-add-to-cart" {% unless product.available %}disabled{% endunless %}>
-            Add to Cart
-          </button>
-          <button type="button" class="btn-buy-now">
-            Buy with Shop Pay
-          </button>
-        </div>
-      {% endform %}
-
-      <div class="product-meta-actions">
-        <a href="#">♡ Add to Wishlist</a>
-        <a href="#">⚖ Compare</a>
-      </div>
-
-      <div class="product-share">
-        <div class="product-share-label">Share:</div>
-        <div class="product-share-icons">
-          <a href="https://www.facebook.com/sharer.php?u={{ shop.url }}{{ product.url }}" target="_blank">f</a>
-          <a href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ product.url }}" target="_blank">p</a>
+    <!-- Related Offerings -->
+    {% if recommendations.products.size > 0 or product.collections.first.products.size > 1 %}
+      <div class="related-offerings">
+        <h2 class="related-offerings-heading">{{ section.settings.related_heading }}</h2>
+        
+        <div class="related-products-grid">
+          {% assign related_products = recommendations.products | default: product.collections.first.products %}
+          {% for related in related_products limit: 4 %}
+            {% if related.handle != product.handle %}
+              <div class="related-product-card">
+                <a href="{{ related.url }}" class="related-product-image">
+                  {% if related.featured_image %}
+                    <img src="{{ related.featured_image | image_url: width: 500 }}" 
+                         alt="{{ related.title | escape }}"
+                         loading="lazy">
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  {% endif %}
+                </a>
+                <h3 class="related-product-title">
+                  <a href="{{ related.url }}">{{ related.title }}</a>
+                </h3>
+                <div class="related-product-price">{{ related.price | money }}</div>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
+    {% endif %}
 
-      <div class="product-meta-info">
-        <div class="product-meta-row">
-          <span class="product-meta-label">Type:</span>
-          <span>{{ product.type | default: "Necklace" }}</span>
-        </div>
-        <div class="product-meta-row">
-          <span class="product-meta-label">Available:</span>
-          <span>{{ product.variants.first.inventory_quantity | default: "Available" }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Product Tabs -->
-  <div class="product-tabs">
-    <div class="product-tabs-nav">
-      <button class="product-tab-button active" data-tab="description">Description</button>
-      <button class="product-tab-button" data-tab="reviews">Reviews</button>
-    </div>
-
-    <div class="product-tab-content active" id="tab-description">
-      <div itemprop="description">
-        {{ product.description }}
-      </div>
-    </div>
-
-    <div class="product-tab-content" id="tab-reviews">
-      <p>Reviews will appear here.</p>
-    </div>
   </div>
 </div>
 
+<!-- Mobile Sticky CTA -->
+<div class="mobile-sticky-cta">
+  <div class="mobile-price">{{ product.price | money }}</div>
+  {% form 'product', product %}
+    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    <input type="hidden" name="quantity" value="1">
+    <button type="submit" class="btn-add-to-cart-ritual" {% unless product.available %}disabled{% endunless %}>
+      {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
+    </button>
+  {% endform %}
+</div>
+
 <script>
-  document.addEventListener("DOMContentLoaded", (event) => {
+  document.addEventListener("DOMContentLoaded", () => {
+    
     // GSAP Animations
     if (typeof gsap !== 'undefined') {
-      gsap.to(".product-main-image", { opacity: 1, duration: 1, ease: "power2.out" });
-      gsap.to(".product-thumbnails", { opacity: 1, duration: 1, delay: 0.2, ease: "power2.out" });
-      gsap.to(".product-info-column", { opacity: 1, duration: 1, delay: 0.3, ease: "power2.out" });
+      gsap.to(".product-gallery", { 
+        opacity: 1, 
+        duration: 1, 
+        ease: "power2.out" 
+      });
+      
+      gsap.to(".product-info", { 
+        opacity: 1, 
+        duration: 1, 
+        delay: 0.3, 
+        ease: "power2.out" 
+      });
+      
+      if (typeof ScrollTrigger !== 'undefined') {
+        gsap.to(".related-product-card", {
+          scrollTrigger: {
+            trigger: ".related-products-grid",
+            start: "top 85%"
+          },
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power2.out"
+        });
+      }
     }
-
+    
     // Thumbnail Gallery
     const thumbnails = document.querySelectorAll('.product-thumbnail');
     const mainImage = document.getElementById('mainProductImage');
@@ -409,26 +704,69 @@
         thumbnails.forEach(t => t.classList.remove('active'));
         this.classList.add('active');
         
-        const img = this.querySelector('img');
-        const newSrc = img.src.replace(/width=\d+/, 'width=1000');
-        mainImage.querySelector('img').src = newSrc;
+        if (mainImage && this.dataset.src) {
+          mainImage.src = this.dataset.src;
+        }
       });
     });
 
-    // Product Tabs
-    const tabButtons = document.querySelectorAll('.product-tab-button');
-    const tabContents = document.querySelectorAll('.product-tab-content');
+    // Accordion Functionality
+    const accordions = document.querySelectorAll('.product-accordion');
     
-    tabButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const tabName = this.getAttribute('data-tab');
+    accordions.forEach(accordion => {
+      const header = accordion.querySelector('.accordion-header');
+      
+      header.addEventListener('click', function() {
+        const isOpen = accordion.classList.contains('open');
         
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
+        // Close all accordions (optional: remove this for independent accordions)
+        // accordions.forEach(a => a.classList.remove('open'));
         
-        this.classList.add('active');
-        document.getElementById(`tab-${tabName}`).classList.add('active');
+        // Toggle current
+        if (isOpen) {
+          accordion.classList.remove('open');
+          this.setAttribute('aria-expanded', 'false');
+        } else {
+          accordion.classList.add('open');
+          this.setAttribute('aria-expanded', 'true');
+        }
       });
     });
+
+    // Mobile Swipe (basic touch support)
+    const gallery = document.querySelector('.product-main-image-container');
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    if (gallery) {
+      gallery.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      
+      gallery.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+    }
+    
+    function handleSwipe() {
+      const diff = touchStartX - touchEndX;
+      const activeThumbnail = document.querySelector('.product-thumbnail.active');
+      const allThumbnails = Array.from(document.querySelectorAll('.product-thumbnail'));
+      const currentIndex = allThumbnails.indexOf(activeThumbnail);
+      
+      if (Math.abs(diff) > 50) {
+        let newIndex;
+        if (diff > 0 && currentIndex < allThumbnails.length - 1) {
+          newIndex = currentIndex + 1;
+        } else if (diff < 0 && currentIndex > 0) {
+          newIndex = currentIndex - 1;
+        }
+        
+        if (newIndex !== undefined) {
+          allThumbnails[newIndex].click();
+        }
+      }
+    }
   });
 </script>

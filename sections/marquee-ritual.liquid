@@ -1,101 +1,122 @@
 {% schema %}
 {
-  "name": "Marquee Ritual",
+  "name": "Ritual Marquee",
   "settings": [
     {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "default": 35,
+      "label": "Speed (seconds)"
+    }
+  ],
+  "blocks": [
+    {
       "type": "text",
-      "id": "text_content",
-      "label": "Marquee Text",
-      "default": "Adornment as devotion ✦ Jewelry as remembrance ✦ Worn with intention"
+      "name": "Marquee Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "✦ Handcrafted for the modern ritual"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Marquee Ritual"
+      "name": "Ritual Marquee",
+      "blocks": [
+        { "type": "text", "settings": { "text": "✦ From us to you, worldwide — in sacred care" } },
+        { "type": "text", "settings": { "text": "✦ Handcrafted for the modern ritual" } },
+        { "type": "text", "settings": { "text": "✦ Each piece blessed under the full moon" } },
+        { "type": "text", "settings": { "text": "✦ Free shipping on orders over ₹5,000" } }
+      ]
     }
   ]
 }
 {% endschema %}
 
-{% style %}
-.marquee-section {
-  padding: 20px 0;
-  background-color: #fcfbf9;
-  border-top: none;
-  border-bottom: none;
+<style>
+.ritual-marquee-section {
+  background-color: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
   overflow: hidden;
+  padding: 18px 0;
+  position: relative;
 }
 
-.marquee {
-  overflow: hidden;
+.ritual-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll {{ section.settings.speed }}s linear infinite;
+}
+
+.ritual-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.ritual-marquee-content {
+  display: flex;
+  gap: 60px;
+  padding-right: 60px;
+}
+
+.ritual-marquee-item {
   white-space: nowrap;
-  font-family: inherit; /* Use theme font */
-  font-size: 1.2rem;
-  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #333; /* Dark gray for elegance */
+  font-weight: 400;
 }
 
-.marquee span {
-  display: inline-block;
-  padding-left: 100%; /* Start off-screen */
-  animation: scroll 30s linear infinite;
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-/* Duplicating content via CSS or JS is often needed for seamless loops, 
-   but for the prompt's specific request "Lightweight", strict CSS scroll: */
-.marquee-content {
-    display: inline-block;
-    animation: scroll 30s linear infinite;
-    padding-right: 50px;
-}
-
-@keyframes scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
-
-/* Disable animation on mobile or prefers-reduced-motion */
-@media (max-width: 768px), (prefers-reduced-motion: reduce) {
-  .marquee-content {
+/* Disable on reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ritual-marquee-track {
     animation: none;
-    white-space: normal;
-    text-align: center;
-    display: block;
-    transform: none;
-    width: 100%;
-    padding: 0 20px;
   }
 }
-{% endstyle %}
 
-<section class="marquee-section">
-  <div class="marquee">
-    <!-- Duplicate creating a seamless loop effect requires typically 2 copies. 
-         We will place enough copies to fill the screen or use the liquid loop if we wanted.
-         For simple CSS marquee as requested:
-    -->
-    <div class="marquee-track" style="display: flex; white-space: nowrap; width: fit-content;">
-       <span class="marquee-content">{{ section.settings.text_content }}</span>
-       <span class="marquee-content">{{ section.settings.text_content }}</span>
-       <span class="marquee-content">{{ section.settings.text_content }}</span>
-       <span class="marquee-content">{{ section.settings.text_content }}</span>
-    </div>
+/* Mobile - slower */
+@media (max-width: 768px) {
+  .ritual-marquee-section {
+    padding: 15px 0;
+  }
+  
+  .ritual-marquee-item {
+    font-size: 0.75rem;
+  }
+}
+</style>
+
+<section class="ritual-marquee-section">
+  <div class="ritual-marquee-track">
+    {% for i in (1..4) %}
+      <div class="ritual-marquee-content">
+        {% for block in section.blocks %}
+          <span class="ritual-marquee-item" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+        {% endfor %}
+      </div>
+    {% endfor %}
   </div>
 </section>
-
-<script>
-  document.addEventListener("DOMContentLoaded", (event) => {
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-        gsap.from(".marquee-section", {
-          scrollTrigger: {
-              trigger: ".marquee-section",
-              start: "top 90%"
-          },
-          opacity: 0,
-          duration: 1.2,
-          ease: "power2.out"
-        });
-    }
-  });
-</script>
