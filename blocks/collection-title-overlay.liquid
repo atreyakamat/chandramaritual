@@ -227,6 +227,33 @@
     },
     {
       "type": "header",
+      "content": "Advanced: Custom Split"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_split",
+      "label": "Use custom title split",
+      "default": false,
+      "info": "Override automatic splitting for collections that don't fit the 'THE + NAME' pattern"
+    },
+    {
+      "type": "text",
+      "id": "custom_prefix",
+      "label": "Custom prefix (black)",
+      "placeholder": "e.g., NEW",
+      "visible_if": "{{ block.settings.use_custom_split }}",
+      "info": "Leave empty to show only the main text"
+    },
+    {
+      "type": "text",
+      "id": "custom_main",
+      "label": "Custom main text (gold)",
+      "placeholder": "Collection name",
+      "visible_if": "{{ block.settings.use_custom_split }}",
+      "info": "Leave empty to use the collection title"
+    },
+    {
+      "type": "header",
       "content": "Colors"
     },
     {
