@@ -1,0 +1,52 @@
+{% schema %}
+{
+  "name": "Announcement Ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement Text",
+      "default": "✦ From us to you, worldwide — in sacred care ✦"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Ritual"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.announcement-ritual {
+  background-color: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.announcement-ritual a {
+  color: inherit;
+  text-decoration: none;
+}
+{% endstyle %}
+
+<div class="announcement-ritual">
+  {{ section.settings.text }}
+</div>
