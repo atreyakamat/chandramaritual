@@ -194,29 +194,7 @@
   transition: color 0.4s ease 0.15s;
 }
 
-/* Sliding gold background */
-.collection-card__link::before {
-  content: "";
-  position: absolute;
-  bottom: 24px;                 /* SAME as text */
-  left: 24px;                   /* SAME as text */
-  height: 48px;                 /* clean multiple of 8 */
-  width: calc(100% - 48px);     /* 24px + 24px */
-  background-color: #91705E;
-  transform: translateX(-110%);
-  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-  z-index: 3;
-}
-
-
-/* Hover effect */
-.collection-card:hover .collection-card__link::before {
-  transform: translateX(0);
-}
-
-.collection-card:hover .collection-card__link::after {
-  color: #ffffff;
-}
+/* Title remains static - no hover animation */
 
 /* Mobile behavior – no hover */
 @media (hover: none) {
