@@ -1,41 +1,23 @@
 
 {% assign block_settings = block.settings %}
 
-<accordion-custom
-  {% if block_settings.open_by_default %}
-    open-by-default-on-desktop
-    open-by-default-on-mobile
-  {% endif %}
->
-  <details
-    class="details"
-    data-testid="accordion-details"
-    {% if block_settings.open_by_default %}
-      open
-    {% endif %}
-    {{ block.shopify_attributes }}
-  >
-    <summary class="details__header">
-      {% render 'icon-or-image',
-        icon: block_settings.icon,
-        image_upload: block_settings.image_upload,
-        width: block_settings.width,
-        class_name: 'details__icon'
-      %}
+<div class="collection-card">
+  <div class="collection-card__header">
+    {% render 'icon-or-image',
+      icon: block_settings.icon,
+      image_upload: block_settings.image_upload,
+      width: block_settings.width,
+      class_name: 'collection-card__icon'
+    %}
+    <h3 class="collection-title">
       {{ block_settings.heading }}
-      <span class="svg-wrapper icon-caret icon-animated">
-        {{- 'icon-caret.svg' | inline_asset_content -}}
-      </span>
-      <span class="svg-wrapper icon-plus">
-        {{- 'icon-plus.svg' | inline_asset_content -}}
-      </span>
-    </summary>
+    </h3>
+  </div>
 
-    <div class="details-content">
-      {% content_for 'blocks' %}
-    </div>
-  </details>
-</accordion-custom>
+  <div class="collection-card__content">
+    {% content_for 'blocks' %}
+  </div>
+</div>
 
 {% stylesheet %}
   .details__icon {

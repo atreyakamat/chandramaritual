@@ -58,13 +58,15 @@
   {{- block.shopify_attributes -}}
 >
   <a
-    class="collection-card__link"
-    {% unless onboarding %}
-      href="{{ collection.url }}"
-    {% endunless %}
-  >
-    <span class="visually-hidden">{{ collection.title }}</span>
+  class="collection-card__link"
+  {% unless onboarding %}
+    href="{{ collection.url }}"
+  {% endunless %}
+  data-title="{{ collection.title | escape }}"
+>
+  <span class="visually-hidden">{{ collection.title }}</span>
   </a>
+
   <div class="collection-card__inner">
     {{ card_image }}
     <div class="collection-card__content layout-panel-flex--column">
@@ -159,4 +161,101 @@
       aspect-ratio: 99;
     }
   }
+  /* ===============================
+   CHANDRAMA RITUAL – COLLECTION TITLE OVERLAY
+   =============================== */
+
+.collection-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Make entire card clickable */
+.collection-card__link {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+/* Title text */
+.collection-card__link::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: 24px;          /* aligned */
+  left: 24px;            /* aligned */
+  padding: 10px 20px;    /* optical balance */
+  font-family: serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: white;
+  background: transparent;
+  z-index: 4;
+  transition: color 0.4s ease 0.15s;
+}
+
+/* Sliding gold background */
+.collection-card__link::before {
+  content: "";
+  position: absolute;
+  bottom: 24px;                 /* SAME as text */
+  left: 24px;                   /* SAME as text */
+  height: 48px;                 /* clean multiple of 8 */
+  width: calc(100% - 48px);     /* 24px + 24px */
+  background-color: #91705E;
+  transform: translateX(-110%);
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  z-index: 3;
+}
+
+
+/* Hover effect */
+.collection-card:hover .collection-card__link::before {
+  transform: translateX(0);
+}
+
+.collection-card:hover .collection-card__link::after {
+  color: #ffffff;
+}
+
+/* Mobile behavior – no hover */
+@media (hover: none) {
+  .collection-card__link::before {
+    display: none;
+  }
+
+  .collection-card__link::after {
+  content: attr(data-title);
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 18px;
+  font-family: serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: transparent;              /* KEY CHANGE */
+  background: transparent;
+  z-index: 4;
+  transition: color 0.4s ease 0.15s;
+}
+
+}
+/* Hide default collection title (keep for SEO & editor) */
+.collection-card__content .collection-title,
+.collection-card__content h1,
+.collection-card__content h2,
+.collection-card__content h3,
+.collection-card__content h4,
+.collection-card__content h5 {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  margin: 0;
+}
+/* HARD HIDE default Shopify collection title */
+.collection-card__content {
+  display: none !important;
+}
+
 {% endstylesheet %}
