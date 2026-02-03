@@ -1,13 +1,12 @@
 
 
 {% if closest.collection == blank %}
-  <div class="collection-title">
-    {{ 'placeholders.collection_title' | t }}
-  </div>
-{% else %}
-  <div class="collection-title">
-    {{ closest.collection.title }}
-  </div>
+  {% assign text = 'placeholders.collection_title' | t %}
+  {% assign collection_title = '<p>' | append: text | append: '</p>' %}
+  {% render 'text', fallback_text: collection_title, block: block %}
+{% elsif closest.collection != blank %}
+  {% assign collection_title = '<p>' | append: closest.collection.title | append: '</p>' %}
+  {% render 'text', fallback_text: collection_title, block: block %}
 {% endif %}
 
 {% schema %}
